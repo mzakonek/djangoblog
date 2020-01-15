@@ -5,7 +5,10 @@ from .views import (
     PostCreateView,
     PostUpdateView,
     PostDeleteView,
-    UserPostListView
+    UserPostListView,
+    PostLikeToogle,
+    PostLikeAPIToogle
+
 )
 from . import views
 
@@ -18,6 +21,8 @@ urlpatterns = [
     path('post/new/', PostCreateView.as_view(), name='post-create'),
     path('post/<int:pk>/update/', PostUpdateView.as_view(), name='post-update'),
     path('post/<int:pk>/delete/', PostDeleteView.as_view(), name='post-delete'),
+    path('post/<int:pk>/like', PostLikeToogle.as_view(), name='post-like_toogle'),
+    path('api/post/<int:pk>/like', PostLikeAPIToogle.as_view(), name='post-like_api_toogle'),
 
     path('about/', views.about, name='blog-about'),
 

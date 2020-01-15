@@ -10,6 +10,12 @@
             </div>
             <h2><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
             <p class="article-content">{{ post.content }}</p>
+            {% if user in post.likes.all %}
+                <a class="likebutton btn btn-success btn-lg" id="like{{ post.id }}" data-href="{{ post.get_api_like_url }}" data-postid="{{ post.id }}">Like</a>
+            {% else %}
+                <a class="likebutton btn btn-primary btn-lg" id="like{{ post.id }}" data-href="{{ post.get_api_like_url }}" data-postid="{{ post.id }}">Like</a>
+            {% endif %}
+
           </div>
         </article>
     {% endfor %}
@@ -33,4 +39,34 @@
         {% endif %}
 
     {% endif %}
+
+
+    <script type="text/javascript">
+        $('.likebutton').click(function(){
+        var this_ = $(this)
+        var likeUrl = this_.attr("data-href")
+        var id = this_.attr("data-postid")
+        $.ajax(
+        {
+            type:"GET",
+            url: likeUrl,
+            data:{},
+        success: function(data){
+            if (data.liked){
+                $( '#like'+ id ).removeClass('btn btn-primary btn-lg');
+                $( '#like'+ id ).addClass('btn btn-success btn-lg');
+            } else {
+                $( '#like'+ id ).removeClass('btn btn-success btn-lg');
+                $( '#like'+ id ).addClass('btn btn-primary btn-lg');
+            }
+
+
+        }
+             }
+             ) });
+    </script>
+
+
 {% endblock content %}
+
+
