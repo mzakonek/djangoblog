@@ -10,10 +10,11 @@
             </div>
             <h2><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
             <p class="article-content">{{ post.content }}</p>
+
             {% if user in post.likes.all %}
-                <a class="likebutton btn btn-success btn-lg" id="like{{ post.id }}" data-href="{{ post.get_api_like_url }}" data-postid="{{ post.id }}">Like</a>
+                <a class="likebutton btn btn-success btn-sm" id="like{{ post.id }}" data-href="{{ post.get_api_like_url }}" data-postid="{{ post.id }}">Like</a>
             {% else %}
-                <a class="likebutton btn btn-primary btn-lg" id="like{{ post.id }}" data-href="{{ post.get_api_like_url }}" data-postid="{{ post.id }}">Like</a>
+                <a class="likebutton btn btn-outline-primary btn-sm" id="like{{ post.id }}" data-href="{{ post.get_api_like_url }}" data-postid="{{ post.id }}">Like</a>
             {% endif %}
 
           </div>
@@ -53,11 +54,11 @@
             data:{},
         success: function(data){
             if (data.liked){
-                $( '#like'+ id ).removeClass('btn btn-primary btn-lg');
-                $( '#like'+ id ).addClass('btn btn-success btn-lg');
+                $( '#like'+ id ).removeClass('btn btn-outline-primary btn-sm');
+                $( '#like'+ id ).addClass('btn btn-success btn-sm');
             } else {
-                $( '#like'+ id ).removeClass('btn btn-success btn-lg');
-                $( '#like'+ id ).addClass('btn btn-primary btn-lg');
+                $( '#like'+ id ).removeClass('btn btn-success btn-sm');
+                $( '#like'+ id ).addClass('btn btn-outline-primary btn-sm');
             }
 
 
