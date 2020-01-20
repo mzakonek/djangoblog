@@ -17,6 +17,12 @@
                 <a class="likebutton btn btn-outline-primary btn-sm" id="like{{ post.id }}" data-href="{{ post.get_api_like_url }}" data-postid="{{ post.id }}">Like</a>
             {% endif %}
 
+            {% if user in post.favorites.all %}
+                <a class="favoritebutton btn btn-success btn-sm" id="favorite{{ post.id }}" data-href="{{ post.get_api_favorite_url }}" data-postid="{{ post.id }}">Favorite</a>
+            {% else %}
+                <a class="favoritebutton btn btn-outline-primary btn-sm" id="favorite{{ post.id }}" data-href="{{ post.get_api_favorite_url }}" data-postid="{{ post.id }}">Favorite</a>
+            {% endif %}
+
           </div>
         </article>
     {% endfor %}
@@ -49,9 +55,9 @@
         var id = this_.attr("data-postid")
         $.ajax(
         {
-            type:"GET",
+            type: "GET",
             url: likeUrl,
-            data:{},
+            data: {},
         success: function(data){
             if (data.liked){
                 $( '#like'+ id ).removeClass('btn btn-outline-primary btn-sm');
@@ -67,6 +73,30 @@
              ) });
     </script>
 
+    <script type="text/javascript">
+        $('.favoritebutton').click(function(){
+        var this_ = $(this)
+        var favoriteUrl = this_.attr("data-href")
+        var id = this_.attr("data-postid")
+        $.ajax(
+        {
+            type: "GET",
+            url: favoriteUrl,
+            data: {},
+        success: function(data){
+            if (data.favorited){
+                $( '#favorite'+ id ).removeClass('btn btn-outline-primary btn-sm');
+                $( '#favorite'+ id ).addClass('btn btn-success btn-sm');
+            } else {
+                $( '#favorite'+ id ).removeClass('btn btn-success btn-sm');
+                $( '#favorite'+ id ).addClass('btn btn-outline-primary btn-sm');
+            }
+
+
+        }
+             }
+             ) });
+    </script>
 
 {% endblock content %}
 

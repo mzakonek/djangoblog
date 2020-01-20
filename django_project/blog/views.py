@@ -103,7 +103,6 @@ class PostLikeAPIToogle(APIView):
     def get(self, request, pk=None, format=None):
         # pk=self.kwargs.get('pk')
         obj = get_object_or_404(Post, pk=pk)
-        url_ = obj.get_absolute_url()
         user = self.request.user
         updated = False
         liked = False
@@ -119,6 +118,35 @@ class PostLikeAPIToogle(APIView):
         data = {
             'updated': updated,
             'liked': liked
+        }
+        return Response(data)
+
+
+class PostFavoriteAPIToogle(APIView):
+    # TODO: I don't like the idea of having "PostLikeAPIToogle" and "PostFavoriteAPIToogle" almost the same
+    #  and duplicated. It should be different
+
+    authentication_classes = [authentication.SessionAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, pk=None, format=None):
+        # pk=self.kwargs.get('pk')
+        obj = get_object_or_404(Post, pk=pk)
+        user = self.request.user
+        updated = False
+        favorited = False
+
+        if user.is_authenticated and obj.author != user:
+            if user in obj.favorites.all():
+                obj.favorites.remove(user)
+            else:
+                obj.favorites.add(user)
+                favorited = True
+            updated = True
+
+        data = {
+            'updated': updated,
+            'favorited': favorited
         }
         return Response(data)
 
