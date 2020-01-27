@@ -65,14 +65,18 @@
         </div>
         <div class="col-md-4">
           <div class="content-section">
-            <h3>Show me...</h3>
             <p class='text-muted'>
-              <ul class="list-group">
-                <li class="list-group-item list-group-item-light">Latest Posts</li>
-                <li class="list-group-item list-group-item-light">Most liked</li>
-                <li class="list-group-item list-group-item-light">Calendars</li>
-                <li class="list-group-item list-group-item-light">etc</li>
-              </ul>
+              <div class="list-group">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'user-ownlists' 'favorites' %}" class="list-group-item list-group-item-primary">Favorited <span class="badge badge-primary">{{ user.post_favorites.count }}</span></a>
+                    <a href="{% url 'user-ownlists' 'likes' %}" class="list-group-item list-group-item-primary">Liked <span class="badge badge-primary">{{ user.post_likes.count }}</span></a>
+                {% endif %}
+
+                <a href="#" class="list-group-item list-group-item-light">Most liked</a>
+
+                <a href="#" class="list-group-item list-group-item-light">Calendars</a>
+                <a href="#" class="list-group-item list-group-item-light">etc</a>
+              </div>
             </p>
           </div>
         </div>

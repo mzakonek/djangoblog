@@ -26,20 +26,37 @@ def home(request):
 class PostListView(ListView):
     model = Post
     template_name = 'blog/home.html'  # by default it looks for <app>/<model>_<viewtype>.html
-    context_object_name = 'posts'  # to behave the same as in the previous function based view (fit the template)
+    context_object_name = 'posts'
     ordering = ['-date_posted']
     paginate_by = 5
 
 
 class UserPostListView(ListView):
-    model = Post
-    template_name = 'blog/user_posts.html'  # by default it looks for <app>/<model>_<viewtype>.html
-    context_object_name = 'posts'  # to behave the same as in the previous function based view (fit the template)
+    template_name = 'blog/user_posts.html'
+    context_object_name = 'posts'
     paginate_by = 5
 
     def get_queryset(self):
         user = get_object_or_404(User, username=self.kwargs.get('username'))
         return Post.objects.filter(author=user).order_by('-date_posted')
+
+
+class UserOwnListsView(ListView):
+    # TODO: check if this approach is better than having two seperated classes for Likes and Favorites
+    template_name = 'blog/user_posts.html'
+    context_object_name = 'posts'
+    paginate_by = 5
+
+    def get_queryset(self):
+        user = self.request.user
+        if self.kwargs.get('listtype') == 'favorites':
+            return [favpost.post for favpost in user.favorite_posts.order_by('index')]
+        return user.post_likes.order_by('-date_posted')
+
+    def get_context_data(self, **kwargs):
+        context = super(UserOwnListsView, self).get_context_data(**kwargs)
+        context['list_type_header'] = self.kwargs.get('listtype')
+        return context
 
 
 class PostDetailView(DetailView):

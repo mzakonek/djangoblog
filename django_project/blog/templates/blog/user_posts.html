@@ -1,6 +1,14 @@
 {% extends "blog/base.html" %}
 {% block content %}
-    <h1 class="mb-3">Posts by {{ view.kwargs.username }} ({{ page_obj.paginator.count }})</h1>
+    {% if list_type_header %}
+        {% if list_type_header == "favorites" %}
+            <h1 class="mb-3">My favorites posts ({{ page_obj.paginator.count }})</h1>
+        {% else %}
+            <h1 class="mb-3">Posts liked by me ({{ page_obj.paginator.count }})</h1>
+        {% endif %}
+    {% else %}
+        <h1 class="mb-3">Posts by {{ view.kwargs.username }} ({{ page_obj.paginator.count }})</h1>
+    {% endif %}
     {% for post in posts %}
         <article class="media content-section">
             <img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}">
