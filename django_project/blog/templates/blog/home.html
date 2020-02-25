@@ -11,17 +11,12 @@
             <h2><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
             <p class="article-content">{{ post.content }}</p>
 
-            {% if user in post.likes.all %}
-                <a class="likebutton btn btn-success btn-sm" id="like{{ post.id }}" data-href="{{ post.get_api_like_url }}" data-postid="{{ post.id }}">Like</a>
-            {% else %}
-                <a class="likebutton btn btn-outline-primary btn-sm" id="like{{ post.id }}" data-href="{{ post.get_api_like_url }}" data-postid="{{ post.id }}">Like</a>
-            {% endif %}
+            <a {% if user in post.likes.all %} class="likebutton btn btn-success btn-sm" {% else %} class="likebutton btn btn-outline-primary btn-sm" {% endif %} id="like{{ post.id }}" data-href="{{ post.get_api_like_url }}" data-postid="{{ post.id }}">Like</a>
 
-            {% if user in post.favorites.all %}
-                <a class="favoritebutton btn btn-success btn-sm" id="favorite{{ post.id }}" data-href="{{ post.get_api_favorite_url }}" data-postid="{{ post.id }}">Favorite</a>
-            {% else %}
-                <a class="favoritebutton btn btn-outline-primary btn-sm" id="favorite{{ post.id }}" data-href="{{ post.get_api_favorite_url }}" data-postid="{{ post.id }}">Favorite</a>
-            {% endif %}
+            <a {% if user in post.favorites.all %} class="favoritebutton btn btn-success btn-sm" {% else %} class="favoritebutton btn btn-outline-primary btn-sm" {% endif %} id="favorite{{ post.id }}" data-href="{{ post.get_api_favorite_url }}" data-postid="{{ post.id }}">Favorite</a>
+
+
+
 
           </div>
         </article>
@@ -68,6 +63,9 @@
             }
 
 
+        },
+        error: function(data){
+            window.location.replace({% url 'login' %});
         }
              }
              ) });
@@ -92,7 +90,9 @@
                 $( '#favorite'+ id ).addClass('btn btn-outline-primary btn-sm');
             }
 
-
+        },
+        error: function(data){
+            window.location.replace({% url 'login' %});
         }
              }
              ) });
