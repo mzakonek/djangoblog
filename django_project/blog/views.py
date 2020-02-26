@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
-from django.http import HttpResponse
+from django.http import JsonResponse, HttpResponseServerError
 from django.views.generic import (
     ListView,
     DetailView,
@@ -10,7 +10,11 @@ from django.views.generic import (
     DeleteView,
     RedirectView
 )
-from .models import Post
+from django.views import View
+from django.views.decorators.csrf import ensure_csrf_cookie
+from django.utils.decorators import method_decorator
+import json
+from .models import Post, Favoritepost
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import authentication, permissions
@@ -50,7 +54,7 @@ class UserOwnListsView(ListView):
     def get_queryset(self):
         user = self.request.user
         if self.kwargs.get('listtype') == 'favorites':
-            return [favpost.post for favpost in user.favorite_posts.order_by('index')]
+            return [favpost.post for favpost in user.favorite_posts.order_by('order')]
         return user.post_likes.order_by('-date_posted')
 
     def get_context_data(self, **kwargs):
@@ -172,12 +176,36 @@ def about(request):
     return render(request, 'blog/about.html')
 
 
-# def like(request):
-#     if request.method == 'GET':
-#         post_id = request.GET['post_id']
-#         likedpost = Post.objects.get(id=post_id)
-#         m = Like(post=likedpost)
-#         m.save()
-#         return HttpResponse('success')
-#     else:
-#         return HttpResponse("unsuccesful")
+class FavoritePostsReorder(View):
+    template_name = "blog/favorite_posts_reorder.html"
+
+    # Ensure we have a CSRF cooke set
+    @method_decorator(ensure_csrf_cookie)
+    def get(self, request):
+        user_pk = self.request.user.pk
+        return render(
+            self.request,
+            self.template_name,
+            {'favoriteposts': Favoritepost.objects.filter(user_id=user_pk).order_by('order')}
+        )
+
+    # Process POST AJAX Request
+    def post(self, request):
+        if request.method == "POST" and request.is_ajax():
+            try:
+                # Parse the JSON payload
+                data = json.loads(request.body)[0]
+                print(json.loads(request.body))
+                # Loop over our list order. The id equals the question id. Update the order and save
+                for idx, favpost_repr in enumerate(data):
+                    favpost = Favoritepost.objects.get(id=favpost_repr["id"])
+                    favpost.order = idx + 1
+                    favpost.save()
+
+            except KeyError:
+                HttpResponseServerError("Malformed data!")
+
+            return JsonResponse({"success": True}, status=200)
+        else:
+            return JsonResponse({"success": False}, status=400)
+

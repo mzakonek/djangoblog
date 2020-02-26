@@ -9,7 +9,8 @@ from .views import (
     PostLikeToogle,
     PostLikeAPIToogle,
     PostFavoriteAPIToogle,
-    UserOwnListsView
+    UserOwnListsView,
+    FavoritePostsReorder
 
 )
 from . import views
@@ -30,6 +31,8 @@ urlpatterns = [
     path('api/post/<int:pk>/favorite', PostFavoriteAPIToogle.as_view(), name='post-favorite_api_toogle'),
 
     path('about/', views.about, name='blog-about'),
+
+    path('favoriteposts/', FavoritePostsReorder.as_view(), name='favposts-reorder'),
 
 ]
 

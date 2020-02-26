@@ -31,9 +31,7 @@ class Post(models.Model):
 class Favoritepost(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favorite_posts')
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='favorite_posts')
-    index = models.IntegerField(default=-1, unique=True)
+    order = models.IntegerField(default=0)
 
-    def save(self, *args, **kwargs):
-        self.index = self.user.post_favourites.count() + 1
-        super(Favoritepost, self).save(*args, **kwargs)
-
+    class Meta():
+        ordering = ['order', ]
