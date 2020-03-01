@@ -1,11 +1,13 @@
 {% extends "blog/base.html" %}
 
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'blog/jquery-sortable.css' %}">
 {% load static i18n %}
 
 {% block title %}Sort your favorites posts{% endblock %}
 
 {% block content %}
-<ol class='example list-group'>
+<ol class='sort list-group'>
     {% for favpost in favoriteposts %}
     <li class="list-group-item" data-id={{favpost.id}}>{{ favpost.post.title }}</li>
     {% endfor %}
@@ -20,6 +22,8 @@
 <script src="{% static 'js/jquery-sortable.js' %}"></script>
 <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
 <script>
+
+
 // get the Django CSRF Cookie
 $(function() {
     var csrftoken = Cookies.get('csrftoken');
@@ -40,7 +44,7 @@ $.ajaxSetup({
 
 // Make our ordered list with a class of example sortable.
 // onDrop (reorder item) make a JSON representation of the list and POST the JSON to the current page
-var group = $("ol.example").sortable({
+var group = $("ol.sort").sortable({
         delay: 500,
         onDrop: function ($item, container, _super) {
             var data = group.sortable("serialize").get();

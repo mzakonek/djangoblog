@@ -20,7 +20,8 @@ from . import views
 urlpatterns = [
     path('', PostListView.as_view(), name='blog-home'),
     path('user/<str:username>', UserPostListView.as_view(), name='user-posts'),
-    path('user/<str:listtype>/', UserOwnListsView.as_view(), name='user-ownlists'),
+    path('me/posts/<str:listtype>/', UserOwnListsView.as_view(), name='user-ownlists'),
+    path('me/posts_sort/favorites/', FavoritePostsReorder.as_view(), name='user-favposts-sort'),
 
     path('post/<int:pk>/', PostDetailView.as_view(), name='post-detail'),
     path('post/new/', PostCreateView.as_view(), name='post-create'),
@@ -32,7 +33,6 @@ urlpatterns = [
 
     path('about/', views.about, name='blog-about'),
 
-    path('favoriteposts/', FavoritePostsReorder.as_view(), name='favposts-reorder'),
 
 ]
 
