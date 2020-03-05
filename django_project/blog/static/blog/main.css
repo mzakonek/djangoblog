@@ -1,11 +1,11 @@
 body {
-  background: #fafafa;
-  color: #333333;
+  background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#cbccc8)) fixed;
+  color: #638CB8;
   margin-top: 5rem;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  color: #444444;
+  color: #6b778c; font-size: 25px; font-family: 'Signika', sans-serif; padding-bottom: 10px;
 }
 
 ul {
@@ -37,7 +37,7 @@ ul {
 }
 
 .article-title {
-  color: #444444;
+  color: #666;
 }
 
 a.article-title:hover {
@@ -81,4 +81,27 @@ a.article-title:hover {
 
 .account-heading {
   font-size: 2.5rem;
+}
+
+.square_btn {
+    display: inline-block;
+    padding: 0.1em 1em;
+    text-decoration: none;
+    color: #67c5ff;
+    border: solid 2px #67c5ff;
+    border-radius: 15px;
+    transition: .6s;
+}
+
+.square_btn:hover {
+    background: #67c5ff;
+    color: white;
+}
+
+.btn {
+    border-radius: 15px;
+    border: solid 2px #67c5ff;
+    transition: .6s;
+
+
 }
